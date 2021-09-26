@@ -333,6 +333,12 @@ shift_expr:
     | shift_expr '>>' sum
     | sum
 
+units:
+    | NAME
+    | NAME '/' units
+    | NAME '*' units
+    | NAME '**' NUMBER
+
 sum:
     | sum '+' term
     | sum '-' term
@@ -380,6 +386,8 @@ atom:
     | (list | listcomp)
     | (dict | set | dictcomp | setcomp)
     | '...'
+
+unit_atom: atom units
 
 strings: STRING+
 list:
