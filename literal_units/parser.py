@@ -2271,6 +2271,44 @@ class GeneratedParser(Parser):
         self._reset(mark)
         return None
 
+    @memoize
+    def units(self) -> Optional[Any]:
+        # units: NAME '/' units | NAME '*' units | NAME '**' NUMBER | NAME
+        mark = self._mark()
+        if (
+            (name := self.name())
+            and
+            (literal := self.expect('/'))
+            and
+            (units := self.units())
+        ):
+            return [name, literal, units]
+        self._reset(mark)
+        if (
+            (name := self.name())
+            and
+            (literal := self.expect('*'))
+            and
+            (units := self.units())
+        ):
+            return [name, literal, units]
+        self._reset(mark)
+        if (
+            (name := self.name())
+            and
+            (literal := self.expect('**'))
+            and
+            (number := self.number())
+        ):
+            return [name, literal, number]
+        self._reset(mark)
+        if (
+            (name := self.name())
+        ):
+            return name
+        self._reset(mark)
+        return None
+
     @memoize_left_rec
     def sum(self) -> Optional[Any]:
         # sum: sum '+' term | sum '-' term | term
@@ -2428,7 +2466,7 @@ class GeneratedParser(Parser):
 
     @memoize_left_rec
     def primary(self) -> Optional[Any]:
-        # primary: primary '.' NAME | primary genexp | primary '(' arguments? ')' | primary '[' slices ']' | atom
+        # primary: primary '.' NAME | primary genexp | primary '(' arguments? ')' | primary '[' slices ']' | unit_atom | atom
         mark = self._mark()
         if (
             (primary := self.primary())
@@ -2467,6 +2505,11 @@ class GeneratedParser(Parser):
             (literal_1 := self.expect(']'))
         ):
             return [primary, literal, slices, literal_1]
+        self._reset(mark)
+        if (
+            (unit_atom := self.unit_atom())
+        ):
+            return unit_atom
         self._reset(mark)
         if (
             (atom := self.atom())
@@ -2575,6 +2618,19 @@ class GeneratedParser(Parser):
             (literal := self.expect('...'))
         ):
             return literal
+        self._reset(mark)
+        return None
+
+    @memoize
+    def unit_atom(self) -> Optional[Any]:
+        # unit_atom: atom units
+        mark = self._mark()
+        if (
+            (a := self.atom())
+            and
+            (u := self.units())
+        ):
+            return ( 'unit_atom' , a , u )
         self._reset(mark)
         return None
 
@@ -5197,7 +5253,7 @@ class GeneratedParser(Parser):
         self._reset(mark)
         return None
 
-    KEYWORDS = ('continue', 'break', 'import', 'nonlocal', 'if', 'lambda', 'else', 'for', 'finally', 'assert', 'yield', 'in', 'None', 'from', '__peg_parser__', 'del', 'with', 'and', 'elif', 'except', 'return', 'not', 'False', 'is', 'def', 'while', 'True', 'try', 'as', 'global', 'pass', 'class', 'raise', 'or')
+    KEYWORDS = ('assert', 'if', 'is', 'None', 'or', 'True', 'import', 'for', 'while', 'def', 'not', 'return', 'pass', 'in', 'except', '__peg_parser__', 'try', 'lambda', 'from', 'elif', 'as', 'nonlocal', 'yield', 'finally', 'False', 'continue', 'else', 'with', 'class', 'global', 'and', 'break', 'raise', 'del')
     SOFT_KEYWORDS = ()
 
 

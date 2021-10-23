@@ -334,10 +334,10 @@ shift_expr:
     | sum
 
 units:
-    | NAME
     | NAME '/' units
     | NAME '*' units
     | NAME '**' NUMBER
+    | NAME
 
 sum:
     | sum '+' term
@@ -366,6 +366,7 @@ primary:
     | primary genexp
     | primary '(' [arguments] ')'
     | primary '[' slices ']'
+    | unit_atom
     | atom
 
 slices:
@@ -387,7 +388,7 @@ atom:
     | (dict | set | dictcomp | setcomp)
     | '...'
 
-unit_atom: atom units
+unit_atom: a=atom u=units {('unit_atom', a, u)}
 
 strings: STRING+
 list:
