@@ -1,10 +1,7 @@
-import itertools
 import tokenize
 from io import StringIO
-from pegen.tokenizer import Tokenizer
-import token
+from .pegen_tokenizer import Tokenizer
 import pint
-from typing import Iterator
 from .parser import GeneratedParser
 from pprint import pprint
 
@@ -58,7 +55,7 @@ def ast_to_segments(node, printfn):
   elif isinstance(node, tokenize.TokenInfo):
     yield from printfn(node.end)
   elif isinstance(node, tuple) and node[0] == 'unit_atom':
-    yield "literal_units.Quantity("
+    yield "unit_literals.Quantity("
     yield from ast_to_segments(node[1], printfn)
     yield ", \""
     yield from ast_to_segments(node[2], printfn)
