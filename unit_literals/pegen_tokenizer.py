@@ -4,9 +4,6 @@ from typing import Dict, Iterator, List
 
 Mark = int  # NewType('Mark', int)
 
-exact_token_types = token.EXACT_TOKEN_TYPES
-
-
 def shorttok(tok: tokenize.TokenInfo) -> str:
     return "%-25.25s" % f"{tok.start[0]}.{tok.start[1]}: {token.tok_name[tok.type]}:{tok.string!r}"
 
