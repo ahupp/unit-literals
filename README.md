@@ -2,9 +2,11 @@
 
 Adds support for physical literals to an interactive IPython shell:
 
-  >>> import ipyliterals
+```
+  >>> import unit_literals.autohook
   >>> speed = 5 m/s
   >>> distance = 20s * speed
+```
 
 ## Wait, what?
 

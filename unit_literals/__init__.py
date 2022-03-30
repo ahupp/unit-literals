@@ -74,6 +74,7 @@ def hook_ipython():
   ip = IPython.get_ipython()
   if hasattr(ip, 'input_transformers_post'):
     ip.input_transformers_post.append(transform_lines)
+    print("Added hook")
   else:
     # support IPython 5, which is used in Google Colab
     # https://ipython.org/ipython-doc/3/config/inputtransforms.html
@@ -85,4 +86,4 @@ def hook_ipython():
 
     ip.input_splitter.logical_line_transforms.append(fn())
     ip.input_transformer_manager.logical_line_transforms.append(fn())
-
+    print("Added ipy5 hook")
